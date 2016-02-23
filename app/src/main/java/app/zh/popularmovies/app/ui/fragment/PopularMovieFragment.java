@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.*;
 import android.widget.GridView;
+import android.widget.ListView;
 import app.zh.popularmovies.app.BuildConfig;
 import app.zh.popularmovies.app.R;
 import app.zh.popularmovies.app.convertor.MovieConvertor;
@@ -29,7 +30,7 @@ import java.util.List;
 public class PopularMovieFragment extends android.support.v4.app.Fragment
 {
 
-    private GridView _movieGridView;
+    private ListView _movieGridView;
     private ImageAdapter _imageAdapter;
 
     public PopularMovieFragment()
@@ -42,8 +43,8 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
     {
         setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
-        _movieGridView = ((GridView) rootView.findViewById(R.id.movie_grid_view));
-        List<Movie> movieList = new ArrayList<Movie>();
+        _movieGridView = ((ListView) rootView.findViewById(R.id.movie_grid_view));
+        List<Movie> movieList = new ArrayList<>();
         _imageAdapter = new ImageAdapter(getActivity(), movieList);
         _movieGridView.setAdapter(_imageAdapter);
         return rootView;

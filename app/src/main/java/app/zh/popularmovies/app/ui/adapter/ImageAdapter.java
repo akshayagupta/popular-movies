@@ -1,6 +1,7 @@
 package app.zh.popularmovies.app.ui.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,14 +46,10 @@ public class ImageAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         Movie item = getItem(position);
-        View view = convertView;
-        if (convertView == null)
-        {
-            view = LayoutInflater.from(_context).inflate(R.layout.grid_view_movie_item, null);
-        }
-        ImageView imageView = ((ImageView) view.findViewById(R.id.movie_image));
+        ImageView imageView = new ImageView(_context);
+        Log.d("imageUrl", item.get_posterPath());
         Picasso.with(_context).load(item.get_posterPath()).into(imageView);
-        return view;
+        return imageView;
     }
 
     public void updateData(List<Movie> movieList)

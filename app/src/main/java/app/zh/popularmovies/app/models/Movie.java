@@ -23,7 +23,7 @@ public class Movie
     public Movie(int movieId, String posterPath, String title, String overView, String releaseDate, double voteAverage)
     {
         _movieId = movieId;
-        _posterPath = " http://image.tmdb.org/t/p/w185/" + posterPath;
+        _posterPath = " https://image.tmdb.org/t/p/w185" + posterPath;
         _title = title;
         _overView = overView;
         _releaseDate = releaseDate;
