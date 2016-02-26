@@ -57,5 +57,4 @@ public class PopularMovieActivity extends ActionBarActivity
 
         return super.onOptionsItemSelected(item);
     }
-
 }

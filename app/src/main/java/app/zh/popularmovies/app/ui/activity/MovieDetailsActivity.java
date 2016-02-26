@@ -49,5 +49,9 @@ public class MovieDetailsActivity extends ActionBarActivity
         Picasso.with(this).load(posterURL).into(posterView);
     }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+    }
 }

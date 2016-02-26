@@ -11,14 +11,15 @@ import app.zh.popularmovies.app.R;
 import app.zh.popularmovies.app.models.Movie;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends BaseAdapter
 {
     private Context _context;
-    private List<Movie> _movieList;
+    private ArrayList<Movie> _movieList;
 
-    public ImageAdapter(Context context, List<Movie> movieList)
+    public ImageAdapter(Context context, ArrayList<Movie> movieList)
     {
         _context = context;
         _movieList = movieList;
@@ -57,7 +58,7 @@ public class ImageAdapter extends BaseAdapter
         return imageView;
     }
 
-    public void updateData(List<Movie> movieList)
+    public void updateData(ArrayList<Movie> movieList)
     {
         _movieList = movieList;
         notifyDataSetChanged();

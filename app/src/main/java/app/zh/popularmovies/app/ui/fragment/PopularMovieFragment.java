@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 import app.zh.popularmovies.app.BuildConfig;
 import app.zh.popularmovies.app.R;
 import app.zh.popularmovies.app.convertor.MovieConvertor;
@@ -36,11 +35,11 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
 
     private GridView _movieGridView;
     private ImageAdapter _imageAdapter;
+    private ArrayList<Movie> _movieList;
 
     public PopularMovieFragment()
     {
     }
-
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -48,9 +47,15 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
     {
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
         _movieGridView = ((GridView) rootView.findViewById(R.id.movie_grid_view));
-        List<Movie> movieList = new ArrayList<>();
-        _imageAdapter = new ImageAdapter(getActivity(), movieList);
-        _movieGridView.setAdapter(_imageAdapter);
+        _movieList = new ArrayList<>();
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movieList"))
+        {
+            fetchMovies();
+        } else
+        {
+            _movieList = savedInstanceState.getParcelableArrayList("movieList");
+        }
+        _imageAdapter = new ImageAdapter(getActivity(), _movieList);
         _movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
@@ -67,26 +72,20 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
                 context.startActivity(intent);
             }
         });
+        _movieGridView.setAdapter(_imageAdapter);
         return rootView;
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        updateView();
-    }
-
-    private void updateView()
+    private void fetchMovies()
     {
         FetchMovieTask fetchMovieTask = new FetchMovieTask();
         fetchMovieTask.execute();
     }
 
-    public class FetchMovieTask extends AsyncTask<Void, Void, List<Movie>>
+    public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
     {
         @Override
-        protected List<Movie> doInBackground(Void... params)
+        protected ArrayList<Movie> doInBackground(Void... params)
         {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -158,6 +157,7 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
 
             try
             {
+                Log.d("json", movieInfoJsonStr);
                 return getMovieInfoFromJSon(movieInfoJsonStr);
 
             } catch (JSONException jsonException)
@@ -168,18 +168,18 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
         }
 
         @Override
-        protected void onPostExecute(List<Movie> movieList)
+        protected void onPostExecute(ArrayList<Movie> movieList)
         {
             if (movieList != null)
             {
-                Log.d("moviefragment", "" + movieList.size());
-                _imageAdapter.updateData(movieList);
+                _movieList = movieList;
+                _imageAdapter.updateData(_movieList);
             }
         }
 
-        private List<Movie> getMovieInfoFromJSon(String jsonData) throws JSONException
+        private ArrayList<Movie> getMovieInfoFromJSon(String jsonData) throws JSONException
         {
-            List<Movie> movieList = new ArrayList<Movie>();
+            ArrayList<Movie> movieList = new ArrayList<Movie>();
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray movieJsonArray = jsonObject.getJSONArray("results");
             for (int i = 0; i < movieJsonArray.length(); i++)
@@ -192,7 +192,15 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
             }
             return movieList;
         }
+    }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        if (_movieList.size() != 0)
+        {
+            outState.putParcelableArrayList("movieList", _movieList);
+        }
+        super.onSaveInstanceState(outState);
     }
 }
