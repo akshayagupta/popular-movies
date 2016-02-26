@@ -23,29 +23,29 @@ public class Movie
     public Movie(int movieId, String posterPath, String title, String overView, String releaseDate, double voteAverage)
     {
         _movieId = movieId;
-        _posterPath = " https://image.tmdb.org/t/p/w185" + posterPath;
+        _posterPath = "https://image.tmdb.org/t/p/w185" + posterPath;
         _title = title;
         _overView = overView;
         _releaseDate = releaseDate;
         _voteAverage = voteAverage;
     }
 
-    public String get_posterPath()
+    public String getPosterPath()
     {
         return _posterPath;
     }
 
-    public boolean is_adult()
+    public boolean isAdult()
     {
         return _adult;
     }
 
-    public String get_overView()
+    public String getOverView()
     {
         return _overView;
     }
 
-    public String get_releaseDate()
+    public String getReleaseDate()
     {
         return _releaseDate;
     }
@@ -55,7 +55,7 @@ public class Movie
         return _movieId;
     }
 
-    public String get_title()
+    public String getTitle()
     {
         return _title;
     }

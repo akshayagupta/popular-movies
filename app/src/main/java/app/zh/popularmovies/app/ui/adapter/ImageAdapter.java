@@ -46,9 +46,14 @@ public class ImageAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         Movie item = getItem(position);
-        ImageView imageView = new ImageView(_context);
-        Log.d("imageUrl", item.get_posterPath());
-        Picasso.with(_context).load(item.get_posterPath()).into(imageView);
+        Log.d("moviefragment", item.getPosterPath());
+        View view = convertView;
+        if (convertView == null)
+        {
+            view = LayoutInflater.from(_context).inflate(R.layout.grid_view_movie_item, null);
+        }
+        ImageView imageView = ((ImageView) view.findViewById(R.id.movie_image));
+        Picasso.with(_context).load(item.getPosterPath()).into(imageView);
         return imageView;
     }
 

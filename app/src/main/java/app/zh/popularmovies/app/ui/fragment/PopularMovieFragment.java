@@ -1,5 +1,7 @@
 package app.zh.popularmovies.app.ui.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -7,12 +9,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.*;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 import app.zh.popularmovies.app.BuildConfig;
 import app.zh.popularmovies.app.R;
 import app.zh.popularmovies.app.convertor.MovieConvertor;
 import app.zh.popularmovies.app.models.Movie;
+import app.zh.popularmovies.app.ui.activity.MovieDetailsActivity;
 import app.zh.popularmovies.app.ui.adapter.ImageAdapter;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,43 +34,53 @@ import java.util.List;
 public class PopularMovieFragment extends android.support.v4.app.Fragment
 {
 
-    private ListView _movieGridView;
+    private GridView _movieGridView;
     private ImageAdapter _imageAdapter;
 
     public PopularMovieFragment()
     {
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
-        _movieGridView = ((ListView) rootView.findViewById(R.id.movie_grid_view));
+        _movieGridView = ((GridView) rootView.findViewById(R.id.movie_grid_view));
         List<Movie> movieList = new ArrayList<>();
         _imageAdapter = new ImageAdapter(getActivity(), movieList);
         _movieGridView.setAdapter(_imageAdapter);
+        _movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                Context context = view.getContext();
+                Movie itemClicked = _imageAdapter.getItem(position);
+                Intent intent = new Intent(context, MovieDetailsActivity.class);
+                intent.putExtra(MovieDetailsActivity.MOVIE_OVERVIEW, itemClicked.getOverView());
+                intent.putExtra(MovieDetailsActivity.MOVIE_TITLE, itemClicked.getTitle());
+                intent.putExtra(MovieDetailsActivity.MOVIE_RELEASE_DATE, itemClicked.getReleaseDate());
+                intent.putExtra(MovieDetailsActivity.MOVIE_VOTE_AVERAGE, itemClicked.get_voteAverage());
+                intent.putExtra(MovieDetailsActivity.MOVIE_POSTER_URL, itemClicked.getPosterPath());
+                context.startActivity(intent);
+            }
+        });
         return rootView;
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    public void onStart()
     {
-        inflater.inflate(R.menu.movie_fragment_menu, menu);
+        super.onStart();
+        updateView();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    private void updateView()
     {
-        int id = item.getItemId();
-        if (id == R.id.action_refresh)
-        {
-            FetchMovieTask fetchMovieTask = new FetchMovieTask();
-            fetchMovieTask.execute();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        FetchMovieTask fetchMovieTask = new FetchMovieTask();
+        fetchMovieTask.execute();
     }
 
     public class FetchMovieTask extends AsyncTask<Void, Void, List<Movie>>
@@ -96,7 +110,7 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
                         .build();
 
                 URL url = new URL(builtUri.toString());
-                Log.d("url", builtUri.toString());
+                Log.d("moviefragment", builtUri.toString());
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -156,7 +170,11 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
         @Override
         protected void onPostExecute(List<Movie> movieList)
         {
-            _imageAdapter.updateData(movieList);
+            if (movieList != null)
+            {
+                Log.d("moviefragment", "" + movieList.size());
+                _imageAdapter.updateData(movieList);
+            }
         }
 
         private List<Movie> getMovieInfoFromJSon(String jsonData) throws JSONException
