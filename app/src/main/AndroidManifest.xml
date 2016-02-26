@@ -22,11 +22,17 @@
         <activity
                 android:name=".ui.activity.MovieDetailsActivity"
                 android:label="@string/title_activity_movie">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.activity.PopularMovieActivity"/>
         </activity>
         <activity
                 android:name=".ui.activity.SettingsActivity"
                 android:label="@string/action_settings"
                 >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.activity.PopularMovieActivity"/>
         </activity>
     </application>
 
