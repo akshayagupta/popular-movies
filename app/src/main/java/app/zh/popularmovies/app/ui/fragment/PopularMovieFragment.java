@@ -36,6 +36,7 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
     private GridView _movieGridView;
     private ImageAdapter _imageAdapter;
     private ArrayList<Movie> _movieList;
+    private String sortLogic;
 
     public PopularMovieFragment()
     {
@@ -45,9 +46,11 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        Log.d("sorting order changed", "sorting order");
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
         _movieGridView = ((GridView) rootView.findViewById(R.id.movie_grid_view));
         _movieList = new ArrayList<>();
+        sortLogic = getSortLogic();
         if (savedInstanceState == null || !savedInstanceState.containsKey("movieList"))
         {
             fetchMovies();
@@ -76,6 +79,17 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
         return rootView;
     }
 
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        if (sortLogic != null && !sortLogic.equals(getSortLogic()))
+        {
+            sortLogic = getSortLogic();
+            fetchMovies();
+        }
+    }
+
     private void fetchMovies()
     {
         FetchMovieTask fetchMovieTask = new FetchMovieTask();
@@ -97,15 +111,11 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
                         "http://api.themoviedb.org/3/discover/movie";
                 final String APPID_PARAM = "api_key";
                 final String SORTING_PARAM = "sort_by";
-                SharedPreferences sharedPrefs =
-                        PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String unitType = sharedPrefs.getString(
-                        getString(R.string.pref_units_key),
-                        getString(R.string.pref_units_most_popular));
+
 
                 Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                         .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_MOVIE_API_KEY)
-                        .appendQueryParameter(SORTING_PARAM, unitType)
+                        .appendQueryParameter(SORTING_PARAM, sortLogic)
                         .build();
 
                 URL url = new URL(builtUri.toString());
@@ -202,5 +212,15 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
             outState.putParcelableArrayList("movieList", _movieList);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    private String getSortLogic()
+    {
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String unitType = sharedPrefs.getString(
+                getString(R.string.pref_units_key),
+                getString(R.string.pref_units_most_popular));
+        return unitType;
     }
 }

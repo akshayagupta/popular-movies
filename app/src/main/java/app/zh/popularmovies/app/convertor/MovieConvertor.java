@@ -8,17 +8,14 @@ public class MovieConvertor
 {
     public Movie getMovieFromJSon(JSONObject jsonObject) throws JSONException
     {
-        int id = jsonObject.getInt("id");
         String title = jsonObject.getString("original_title");
         String overView = jsonObject.getString("overview");
-        String language = jsonObject.getString("original_language");
-        String posterPath = "";
+        String posterPath = jsonObject.getString("poster_path");
         String releaseDate = jsonObject.getString("release_date");
         double voteAveraage = jsonObject.getDouble("vote_average");
-        if (jsonObject.getString("poster_path") != null)
+        if (posterPath != null)
         {
-            posterPath = jsonObject.getString("poster_path");
-            return new Movie(id, posterPath, title, overView, releaseDate, voteAveraage);
+            return new Movie(posterPath, title, overView, releaseDate, voteAveraage);
         } else
         {
             return null;

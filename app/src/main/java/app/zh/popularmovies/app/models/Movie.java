@@ -12,13 +12,11 @@ public class Movie implements Parcelable
     private String _posterPath;
     private String _overView;
     private String _releaseDate;
-    private int _movieId;
     private String _title;
     private double _voteAverage;
 
-    public Movie(int movieId, String posterPath, String title, String overView, String releaseDate, double voteAverage)
+    public Movie(String posterPath, String title, String overView, String releaseDate, double voteAverage)
     {
-        _movieId = movieId;
         _posterPath = "https://image.tmdb.org/t/p/w185" + posterPath;
         _title = title;
         _overView = overView;
@@ -28,7 +26,6 @@ public class Movie implements Parcelable
 
     private Movie(Parcel in)
     {
-        _movieId = in.readInt();
         _posterPath = in.readString();
         _title = in.readString();
         _overView = in.readString();
@@ -52,11 +49,6 @@ public class Movie implements Parcelable
         return _releaseDate;
     }
 
-    public int get_movieId()
-    {
-        return _movieId;
-    }
-
     public String getTitle()
     {
         return _title;
@@ -77,7 +69,6 @@ public class Movie implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeInt(_movieId);
         dest.writeString(_posterPath);
         dest.writeString(_title);
         dest.writeString(_overView);
