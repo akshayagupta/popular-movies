@@ -38,10 +38,19 @@ android {
     buildTypes.each {
         it.buildConfigField 'String', 'OPEN_MOVIE_API_KEY', MyMovieApiKey
     }
+
+
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
 }
+
