@@ -5,10 +5,23 @@ import android.support.v7.app.ActionBarActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 import app.zh.popularmovies.app.R;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetailsActivity extends ActionBarActivity
 {
+    @Bind(R.id.title)
+    TextView titleView;
+    @Bind(R.id.release_date)
+    TextView releaseDateView;
+    @Bind(R.id.vote_avg)
+    TextView voteAvgView;
+    @Bind(R.id.overview)
+    TextView overView;
+    @Bind(R.id.poster)
+    ImageView posterView;
+
     public static String MOVIE_OVERVIEW = "overview";
     public static String MOVIE_TITLE = "details";
     public static String MOVIE_RELEASE_DATE = "release_date";
@@ -22,6 +35,7 @@ public class MovieDetailsActivity extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_details_activity);
+        ButterKnife.bind(this);
         extractDataFromIntent();
         initView();
     }
@@ -37,11 +51,6 @@ public class MovieDetailsActivity extends ActionBarActivity
 
     private void initView()
     {
-        TextView titleView = ((TextView) findViewById(R.id.title));
-        TextView overView = ((TextView) findViewById(R.id.overview));
-        TextView releaseDateView = ((TextView) findViewById(R.id.release_date));
-        TextView voteAvgView = ((TextView) findViewById(R.id.vote_avg));
-        ImageView posterView = ((ImageView) findViewById(R.id.poster));
         titleView.setText(title);
         releaseDateView.setText("Release Date:  " + releaseDate);
         voteAvgView.setText("Rating:  " + voteAverage);
