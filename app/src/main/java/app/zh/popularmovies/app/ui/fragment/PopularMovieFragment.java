@@ -223,4 +223,9 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
                 getString(R.string.pref_units_most_popular));
         return unitType;
     }
+
+    public interface onItemClicked
+    {
+        public void itemClicked(Uri uri);
+    }
 }
