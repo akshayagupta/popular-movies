@@ -44,7 +44,7 @@ public class MovieDetailsFragment extends Fragment
         {
             mUri = arguments.getParcelable(DETAIL_URI);
         }
-        View rootView = inflater.inflate(R.layout.movie_details_activity, container, false);
+        View rootView = inflater.inflate(R.layout.movie_detail_fragment, container, false);
         ButterKnife.bind(getActivity());
         return rootView;
     }

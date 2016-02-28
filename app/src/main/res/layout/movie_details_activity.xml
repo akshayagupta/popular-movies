@@ -1,53 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        >
-    <LinearLayout android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content">
-        <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:textSize="16dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:layout_height="wrap_content"/>
-
-        <ImageView
-                android:id="@+id/poster"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"/>
-        <TextView
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:id="@+id/release_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"/>
-        <TextView
-                android:id="@+id/overview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"/>
-        <TextView
-                android:id="@+id/vote_avg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"/>
-
-    </LinearLayout>
-</ScrollView>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/movie_detail_container"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.example.android.sunshine.app.DetailActivity"
+             tools:ignore="MergeRootFrame" />

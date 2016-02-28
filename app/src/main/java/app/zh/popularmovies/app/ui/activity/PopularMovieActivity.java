@@ -3,21 +3,15 @@ package app.zh.popularmovies.app.ui.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 
 import app.zh.popularmovies.app.R;
 import app.zh.popularmovies.app.ui.fragment.MovieDetailsFragment;
 import app.zh.popularmovies.app.ui.fragment.PopularMovieFragment;
 
-public class PopularMovieActivity extends ActionBarActivity implements PopularMovieFragment.onItemClicked
+public class PopularMovieActivity extends ActionBarActivity implements PopularMovieFragment.CallBack
 {
     private boolean mTwoPane;
     private static final String MOVIE_DETAIL_FRAGMENT_TAG = "DFTAG";

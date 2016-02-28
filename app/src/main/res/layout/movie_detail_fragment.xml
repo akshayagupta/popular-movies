@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+            >
+        <TextView
+                android:paddingLeft="16dp"
+                android:background="#009688"
+                android:textColor="@android:color/white"
+                android:layout_height="96dp"
+                android:layout_marginBottom="4dp"
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:text="Chappie"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="?android:attr/textAppearanceLarge"
+                />
+        <LinearLayout
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:id="@+id/poster"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_launcher"/>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:paddingRight="8dp"
+                        android:id="@+id/release_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16dp"
+                        android:paddingTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:paddingBottom="4dp"/>
+                <TextView
+                        android:id="@+id/vote_avg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16dp"
+                        android:layout_marginBottom="4dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"/>
+                <TextView
+                        android:id="@+id/add_favorite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:text="Mark as Favorite"
+                        android:background="#009688"
+                        android:textColor="@android:color/white"
+                        />
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+                android:id="@+id/overview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"/>
+    </LinearLayout>
+
+</ScrollView>

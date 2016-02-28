@@ -1,8 +1,11 @@
 package app.zh.popularmovies.app.ui.fragment;
 
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,7 +33,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PopularMovieFragment extends android.support.v4.app.Fragment
+public class PopularMovieFragment extends android.support.v4.app.Fragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
 
     private GridView _movieGridView;
@@ -64,15 +67,7 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Context context = view.getContext();
-                Movie itemClicked = _imageAdapter.getItem(position);
-                Intent intent = new Intent(context, MovieDetailsActivity.class);
-                intent.putExtra(MovieDetailsActivity.MOVIE_OVERVIEW, itemClicked.getOverView());
-                intent.putExtra(MovieDetailsActivity.MOVIE_TITLE, itemClicked.getTitle());
-                intent.putExtra(MovieDetailsActivity.MOVIE_RELEASE_DATE, itemClicked.getReleaseDate());
-                intent.putExtra(MovieDetailsActivity.MOVIE_VOTE_AVERAGE, itemClicked.get_voteAverage());
-                intent.putExtra(MovieDetailsActivity.MOVIE_POSTER_URL, itemClicked.getPosterPath());
-                context.startActivity(intent);
+                ((CallBack) getActivity()).itemClicked(null);
             }
         });
         _movieGridView.setAdapter(_imageAdapter);
@@ -94,6 +89,24 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
     {
         FetchMovieTask fetchMovieTask = new FetchMovieTask();
         fetchMovieTask.execute();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args)
+    {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
+    {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader)
+    {
+
     }
 
     public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
@@ -224,7 +237,7 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
         return unitType;
     }
 
-    public interface onItemClicked
+    public interface CallBack
     {
         public void itemClicked(Uri uri);
     }
