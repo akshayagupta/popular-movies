@@ -2,12 +2,14 @@ package app.zh.popularmovies.app.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
 public class MovieProvider extends ContentProvider
 {
     private MovieDBHelper mOpenHelper;
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     @Override
     public boolean onCreate()
@@ -25,7 +27,14 @@ public class MovieProvider extends ContentProvider
     @Override
     public String getType(Uri uri)
     {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match)
+        {
+            case 0:
+                return null;
+            default:
+                return null;
+        }
     }
 
     @Override
@@ -44,5 +53,12 @@ public class MovieProvider extends ContentProvider
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs)
     {
         return 0;
+    }
+
+    static UriMatcher buildUriMatcher()
+    {
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        final String authority = MovieContract.CONTENT_AUTHORITY;
+        return matcher;
     }
 }
