@@ -10,7 +10,11 @@ import app.zh.popularmovies.app.R;
 import app.zh.popularmovies.app.ui.fragment.PopularMovieFragment;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 public class PopularMovieActivity extends ActionBarActivity implements PopularMovieFragment.CallBack
+=======
+public class PopularMovieActivity extends ActionBarActivity
+>>>>>>> parent of 1a04407... adding fragment for movie details fragment
 =======
 public class PopularMovieActivity extends ActionBarActivity
 >>>>>>> parent of 1a04407... adding fragment for movie details fragment

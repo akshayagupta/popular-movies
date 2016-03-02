@@ -236,9 +236,12 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment implem
                 getString(R.string.pref_units_most_popular));
         return unitType;
     }
+<<<<<<< HEAD
 
     public interface CallBack
     {
         public void itemClicked(Uri uri);
     }
+=======
+>>>>>>> parent of 1a04407... adding fragment for movie details fragment
 }
