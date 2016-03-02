@@ -1,6 +1,7 @@
 package app.zh.popularmovies.app.ui.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,15 +10,7 @@ import android.view.MenuItem;
 import app.zh.popularmovies.app.R;
 import app.zh.popularmovies.app.ui.fragment.PopularMovieFragment;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 public class PopularMovieActivity extends ActionBarActivity implements PopularMovieFragment.CallBack
-=======
-public class PopularMovieActivity extends ActionBarActivity
->>>>>>> parent of 1a04407... adding fragment for movie details fragment
-=======
-public class PopularMovieActivity extends ActionBarActivity
->>>>>>> parent of 1a04407... adding fragment for movie details fragment
 {
 
     @Override
@@ -58,5 +51,11 @@ public class PopularMovieActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void itemClicked(Uri uri)
+    {
+
     }
 }
