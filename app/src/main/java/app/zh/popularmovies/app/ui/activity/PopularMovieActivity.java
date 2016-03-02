@@ -1,47 +1,32 @@
 package app.zh.popularmovies.app.ui.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import app.zh.popularmovies.app.R;
-import app.zh.popularmovies.app.ui.fragment.MovieDetailsFragment;
 import app.zh.popularmovies.app.ui.fragment.PopularMovieFragment;
 
+<<<<<<< HEAD
 public class PopularMovieActivity extends ActionBarActivity implements PopularMovieFragment.CallBack
+=======
+public class PopularMovieActivity extends ActionBarActivity
+>>>>>>> parent of 1a04407... adding fragment for movie details fragment
 {
-    private boolean mTwoPane;
-    private static final String MOVIE_DETAIL_FRAGMENT_TAG = "DFTAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
-        if (findViewById(R.id.movie_detail_fragment) != null)
+        if (savedInstanceState == null)
         {
-            // The detail container view will be present only in the large-screen layouts
-            // (res/layout-sw600dp). If this view is present, then the activity should be
-            // in two-pane mode.
-            mTwoPane = true;
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            if (savedInstanceState == null)
-            {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.movie_detail_fragment, new MovieDetailsFragment(), MOVIE_DETAIL_FRAGMENT_TAG)
-                        .commit();
-            }
-        } else
-        {
-            mTwoPane = false;
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new PopularMovieFragment())
+                    .commit();
         }
-
-
     }
 
 
@@ -69,30 +54,5 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void itemClicked(Uri contentUri)
-    {
-        if (mTwoPane)
-        {
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            Bundle args = new Bundle();
-            args.putParcelable(MovieDetailsFragment.DETAIL_URI, contentUri);
-
-            MovieDetailsFragment fragment = new MovieDetailsFragment();
-            fragment.setArguments(args);
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail_fragment, fragment, MOVIE_DETAIL_FRAGMENT_TAG)
-                    .commit();
-        } else
-        {
-            Intent intent = new Intent(this, MovieDetailsActivity.class)
-                    .setData(contentUri);
-            startActivity(intent);
-        }
     }
 }
