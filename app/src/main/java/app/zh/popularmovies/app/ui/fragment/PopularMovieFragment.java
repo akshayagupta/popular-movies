@@ -16,8 +16,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import app.zh.popularmovies.app.BuildConfig;
 import app.zh.popularmovies.app.R;
+import app.zh.popularmovies.app.Utilities;
 import app.zh.popularmovies.app.convertor.MovieConvertor;
 import app.zh.popularmovies.app.models.Movie;
+import app.zh.popularmovies.app.network.FetchMovieTask;
 import app.zh.popularmovies.app.ui.activity.MovieDetailsActivity;
 import app.zh.popularmovies.app.ui.adapter.ImageAdapter;
 import org.json.JSONArray;
@@ -33,12 +35,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PopularMovieFragment extends android.support.v4.app.Fragment implements LoaderManager.LoaderCallbacks<Cursor>
+public class PopularMovieFragment extends android.support.v4.app.Fragment
 {
 
     private GridView _movieGridView;
     private ImageAdapter _imageAdapter;
-    private ArrayList<Movie> _movieList;
+
     private String sortLogic;
 
     public PopularMovieFragment()
@@ -52,8 +54,8 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment implem
         Log.d("sorting order changed", "sorting order");
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
         _movieGridView = ((GridView) rootView.findViewById(R.id.movie_grid_view));
-        _movieList = new ArrayList<>();
-        sortLogic = getSortLogic();
+        ArrayList<Movie> _movieList = new ArrayList<>();
+        sortLogic = Utilities.getSortLogic(getActivity());
         if (savedInstanceState == null || !savedInstanceState.containsKey("movieList"))
         {
             fetchMovies();
@@ -78,164 +80,29 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment implem
     public void onStart()
     {
         super.onStart();
-        if (sortLogic != null && !sortLogic.equals(getSortLogic()))
+        if (sortLogic != null && !sortLogic.equals(Utilities.getSortLogic(getActivity())))
         {
-            sortLogic = getSortLogic();
+            sortLogic = Utilities.getSortLogic(getActivity());
             fetchMovies();
         }
     }
 
     private void fetchMovies()
     {
-        FetchMovieTask fetchMovieTask = new FetchMovieTask();
+        FetchMovieTask fetchMovieTask = new FetchMovieTask(Utilities.getSortLogic(getActivity()), _imageAdapter);
         fetchMovieTask.execute();
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args)
-    {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
-    {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader)
-    {
-
-    }
-
-    public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
-    {
-        @Override
-        protected ArrayList<Movie> doInBackground(Void... params)
-        {
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-            String movieInfoJsonStr = null;
-
-            try
-            {
-                final String MOVIE_BASE_URL =
-                        "http://api.themoviedb.org/3/discover/movie";
-                final String APPID_PARAM = "api_key";
-                final String SORTING_PARAM = "sort_by";
-
-
-                Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
-                        .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_MOVIE_API_KEY)
-                        .appendQueryParameter(SORTING_PARAM, sortLogic)
-                        .build();
-
-                URL url = new URL(builtUri.toString());
-                Log.d("moviefragment", builtUri.toString());
-
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null)
-                {
-                    return null;
-                }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null)
-                {
-                    buffer.append(line + "\n");
-                }
-
-                if (buffer.length() == 0)
-                {
-                    return null;
-                }
-                movieInfoJsonStr = buffer.toString();
-            } catch (IOException e)
-            {
-                return null;
-            } finally
-            {
-                if (urlConnection != null)
-                {
-                    urlConnection.disconnect();
-                }
-                if (reader != null)
-                {
-                    try
-                    {
-                        reader.close();
-                    } catch (final IOException e)
-                    {
-
-                    }
-                }
-            }
-
-            try
-            {
-                Log.d("json", movieInfoJsonStr);
-                return getMovieInfoFromJSon(movieInfoJsonStr);
-
-            } catch (JSONException jsonException)
-            {
-
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Movie> movieList)
-        {
-            if (movieList != null)
-            {
-                _movieList = movieList;
-                _imageAdapter.updateData(_movieList);
-            }
-        }
-
-        private ArrayList<Movie> getMovieInfoFromJSon(String jsonData) throws JSONException
-        {
-            ArrayList<Movie> movieList = new ArrayList<Movie>();
-            JSONObject jsonObject = new JSONObject(jsonData);
-            JSONArray movieJsonArray = jsonObject.getJSONArray("results");
-            for (int i = 0; i < movieJsonArray.length(); i++)
-            {
-                Movie movie = new MovieConvertor().getMovieFromJSon(movieJsonArray.getJSONObject(i));
-                if (movie != null)
-                {
-                    movieList.add(movie);
-                }
-            }
-            return movieList;
-        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
-        if (_movieList.size() != 0)
+        if (_imageAdapter.getCount() != 0)
         {
-            outState.putParcelableArrayList("movieList", _movieList);
+            outState.putParcelableArrayList("movieList", _imageAdapter.getData());
         }
         super.onSaveInstanceState(outState);
     }
 
-    private String getSortLogic()
-    {
-        SharedPreferences sharedPrefs =
-                PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String unitType = sharedPrefs.getString(
-                getString(R.string.pref_units_key),
-                getString(R.string.pref_units_most_popular));
-        return unitType;
-    }
 
     public interface CallBack
     {

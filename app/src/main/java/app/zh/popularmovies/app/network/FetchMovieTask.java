@@ -26,12 +26,12 @@ public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
 {
 
     private ImageAdapter _imageAdapter;
-    private String sortLogic;
+    private String _sortLogic;
 
-    public FetchMovieTask(Context context, ImageAdapter imageAdapter)
+    public FetchMovieTask(String sortLogic, ImageAdapter imageAdapter)
     {
         _imageAdapter = imageAdapter;
-        sortLogic = Utilities.getSortLogic(context);
+        _sortLogic = sortLogic;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
 
             Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                     .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_MOVIE_API_KEY)
-                    .appendQueryParameter(SORTING_PARAM, sortLogic)
+                    .appendQueryParameter(SORTING_PARAM, _sortLogic)
                     .build();
 
             URL url = new URL(builtUri.toString());
@@ -103,7 +103,6 @@ public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
 
         try
         {
-            Log.d("json", movieInfoJsonStr);
             return getMovieInfoFromJSon(movieInfoJsonStr);
 
         } catch (JSONException jsonException)
@@ -134,6 +133,10 @@ public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
     @Override
     protected void onPostExecute(ArrayList<Movie> movies)
     {
-        super.onPostExecute(movies);
+
+        if (movies != null)
+        {
+            _imageAdapter.updateData(movies);
+        }
     }
 }

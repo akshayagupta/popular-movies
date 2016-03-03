@@ -63,4 +63,9 @@ public class ImageAdapter extends BaseAdapter
         _movieList = movieList;
         notifyDataSetChanged();
     }
+
+    public ArrayList<Movie> getData()
+    {
+        return _movieList;
+    }
 }
