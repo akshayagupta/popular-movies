@@ -17,7 +17,6 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
-                android:text="Chappie"
                 android:fontFamily="sans-serif-condensed"
                 android:textSize="?android:attr/textAppearanceLarge"
                 />
@@ -36,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:src="@drawable/ic_launcher"/>
+                 />
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
@@ -48,6 +47,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
                         android:paddingTop="4dp"
+                        android:fontFamily="sans-serif-condensed"
                         android:layout_marginBottom="4dp"
                         android:paddingBottom="4dp"/>
                 <TextView
@@ -55,6 +55,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
+                        android:fontFamily="sans-serif-condensed"
                         android:layout_marginBottom="4dp"
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"/>
@@ -63,7 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:text="Mark as Favorite"
+                        android:fontFamily="sans-serif-condensed"
                         android:background="#009688"
                         android:textColor="@android:color/white"
                         />
@@ -74,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16dp"
-                android:paddingLeft="8dp"
+                android:layout_marginLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"/>
@@ -86,8 +87,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"/>
         <TextView
+                android:fontFamily="sans-serif-condensed"
+                android:visibility="gone"
                 android:id="@+id/trailer_text"
-                android:paddingLeft="8dp"
+                android:uLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
@@ -96,6 +99,7 @@
                 android:layout_height="wrap_content"
                 />
         <LinearLayout
+                android:visibility="gone"
                 android:orientation="vertical"
                 android:id="@+id/trailer_container"
                 android:layout_width="match_parent"

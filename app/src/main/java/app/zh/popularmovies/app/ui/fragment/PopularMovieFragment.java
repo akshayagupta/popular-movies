@@ -55,6 +55,8 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
         _movieGridView = ((GridView) rootView.findViewById(R.id.movie_grid_view));
         ArrayList<Movie> _movieList = new ArrayList<>();
+        _imageAdapter = new ImageAdapter(getActivity(), _movieList);
+        _movieGridView.setAdapter(_imageAdapter);
         sortLogic = Utilities.getSortLogic(getActivity());
         if (savedInstanceState == null || !savedInstanceState.containsKey("movieList"))
         {
@@ -62,17 +64,16 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
         } else
         {
             _movieList = savedInstanceState.getParcelableArrayList("movieList");
+            _imageAdapter.updateData(_movieList);
         }
-        _imageAdapter = new ImageAdapter(getActivity(), _movieList);
         _movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                ((CallBack) getActivity()).itemClicked(null);
+                ((CallBack) getActivity()).itemClicked(_imageAdapter.getItem(position));
             }
         });
-        _movieGridView.setAdapter(_imageAdapter);
         return rootView;
     }
 
@@ -106,6 +107,6 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
 
     public interface CallBack
     {
-        public void itemClicked(Uri uri);
+        public void itemClicked(Movie movie);
     }
 }

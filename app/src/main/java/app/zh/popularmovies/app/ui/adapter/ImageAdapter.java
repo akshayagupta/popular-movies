@@ -54,7 +54,7 @@ public class ImageAdapter extends BaseAdapter
             view = LayoutInflater.from(_context).inflate(R.layout.grid_view_movie_item, null);
         }
         ImageView imageView = ((ImageView) view.findViewById(R.id.movie_image));
-        Picasso.with(_context).load(item.getPosterPath()).into(imageView);
+        Picasso.with(_context).load("https://image.tmdb.org/t/p/w185" + item.getPosterPath()).into(imageView);
         return imageView;
     }
 

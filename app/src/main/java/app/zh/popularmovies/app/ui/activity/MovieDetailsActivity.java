@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso;
 
 public class MovieDetailsActivity extends ActionBarActivity
 {
+    public static String JSON_DESCRIPTION = "json_description";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -22,7 +23,7 @@ public class MovieDetailsActivity extends ActionBarActivity
         if (savedInstanceState == null) {
 
             Bundle arguments = new Bundle();
-            arguments.putParcelable(MovieDetailsFragment.DETAIL_URI, getIntent().getData());
+            arguments.putString(MovieDetailsFragment.DETAIL_URI, getIntent().getStringExtra(JSON_DESCRIPTION));
 
             MovieDetailsFragment fragment = new MovieDetailsFragment();
             fragment.setArguments(arguments);

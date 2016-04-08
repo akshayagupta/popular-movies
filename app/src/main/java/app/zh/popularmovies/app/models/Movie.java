@@ -14,14 +14,16 @@ public class Movie implements Parcelable
     private String _releaseDate;
     private String _title;
     private double _voteAverage;
+    private List<String> _videoKeyList;
 
-    public Movie(String posterPath, String title, String overView, String releaseDate, double voteAverage)
+    public Movie(String posterPath, String title, String overView, String releaseDate, double voteAverage, List<String> videoLinkList)
     {
-        _posterPath = "https://image.tmdb.org/t/p/w185" + posterPath;
+        _posterPath = posterPath;
         _title = title;
         _overView = overView;
         _releaseDate = releaseDate;
         _voteAverage = voteAverage;
+        _videoKeyList = videoLinkList;
     }
 
     private Movie(Parcel in)
@@ -60,6 +62,11 @@ public class Movie implements Parcelable
         return _voteAverage;
     }
 
+    public List<String> getVideoKeyList()
+    {
+        return _videoKeyList;
+    }
+
     @Override
     public int describeContents()
     {
@@ -74,6 +81,7 @@ public class Movie implements Parcelable
         dest.writeString(_overView);
         dest.writeString(_releaseDate);
         dest.writeDouble(_voteAverage);
+
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>()

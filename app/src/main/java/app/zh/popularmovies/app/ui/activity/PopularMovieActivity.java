@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import app.zh.popularmovies.app.R;
+import app.zh.popularmovies.app.convertor.MovieConvertor;
+import app.zh.popularmovies.app.models.Movie;
 import app.zh.popularmovies.app.ui.fragment.MovieDetailsFragment;
 import app.zh.popularmovies.app.ui.fragment.PopularMovieFragment;
 
@@ -66,11 +68,11 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
     }
 
     @Override
-    public void itemClicked(Uri contentUri)
+    public void itemClicked(Movie movie)
     {
         if (mTwoPane) {
             Bundle args = new Bundle();
-            args.putParcelable(MovieDetailsFragment.DETAIL_URI, contentUri);
+            args.putString(MovieDetailsFragment.DETAIL_URI, new MovieConvertor().getMovieJsonString(movie));
 
             MovieDetailsFragment fragment = new MovieDetailsFragment();
             fragment.setArguments(args);
@@ -80,7 +82,7 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
                     .commit();
         } else {
             Intent intent = new Intent(this, MovieDetailsActivity.class)
-                    .setData(contentUri);
+                    .putExtra(MovieDetailsActivity.JSON_DESCRIPTION , new MovieConvertor().getMovieJsonString(movie));
             startActivity(intent);
         }
 
