@@ -8,22 +8,34 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import app.zh.popularmovies.app.R;
+import app.zh.popularmovies.app.ui.fragment.MovieDetailsFragment;
 import app.zh.popularmovies.app.ui.fragment.PopularMovieFragment;
 
 public class PopularMovieActivity extends ActionBarActivity implements PopularMovieFragment.CallBack
 {
+    private static final String MOVIE_DETAIL_FRAGMENT_TAG = "MDFTAG";
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
-        if (savedInstanceState == null)
-        {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PopularMovieFragment())
-                    .commit();
+        if (findViewById(R.id.movie_detail_container) != null) {
+            mTwoPane = true;
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, new MovieDetailsFragment(), MOVIE_DETAIL_FRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
         }
+
+        PopularMovieFragment forecastFragment =  ((PopularMovieFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.movie_list_fragment));
+
     }
 
 
@@ -54,8 +66,23 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
     }
 
     @Override
-    public void itemClicked(Uri uri)
+    public void itemClicked(Uri contentUri)
     {
+        if (mTwoPane) {
+            Bundle args = new Bundle();
+            args.putParcelable(MovieDetailsFragment.DETAIL_URI, contentUri);
+
+            MovieDetailsFragment fragment = new MovieDetailsFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment, MOVIE_DETAIL_FRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, MovieDetailsActivity.class)
+                    .setData(contentUri);
+            startActivity(intent);
+        }
 
     }
 }

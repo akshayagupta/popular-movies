@@ -13,19 +13,14 @@ import com.squareup.picasso.Picasso;
 public class MovieDetailsActivity extends ActionBarActivity
 {
 
-    public static String MOVIE_OVERVIEW = "overview";
-    public static String MOVIE_TITLE = "details";
-    public static String MOVIE_RELEASE_DATE = "release_date";
-    public static String MOVIE_VOTE_AVERAGE = "vote_average";
-    public static String MOVIE_POSTER_URL = "movie_poster_url";
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_details_activity);
-        if (savedInstanceState == null)
-        {
+
+        if (savedInstanceState == null) {
+
             Bundle arguments = new Bundle();
             arguments.putParcelable(MovieDetailsFragment.DETAIL_URI, getIntent().getData());
 
