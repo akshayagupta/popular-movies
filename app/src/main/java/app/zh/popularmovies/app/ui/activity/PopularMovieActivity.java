@@ -74,10 +74,8 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
         if (mTwoPane) {
             Bundle args = new Bundle();
             args.putString(MovieDetailsFragment.DETAIL_URI, new MovieConvertor().getMovieJsonString(movie));
-
             MovieDetailsFragment fragment = new MovieDetailsFragment();
             fragment.setArguments(args);
-
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_detail_container, fragment, MOVIE_DETAIL_FRAGMENT_TAG)
                     .commit();

@@ -23,4 +23,7 @@
 
     <string name="pref_units_favorite" translatable="false">favorite</string>
 
+    <string name="reviews">Reviews</string>
+    <string name="trailers">Trailers</string>
+
 </resources>

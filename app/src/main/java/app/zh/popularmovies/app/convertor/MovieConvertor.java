@@ -53,7 +53,7 @@ public class MovieConvertor
             result.put("vote_average", movie.get_voteAverage());
             result.put("release_date", movie.getReleaseDate());
             result.put("poster_path", movie.getPosterPath());
-            result.put("videos" , movie.getHasVideos());
+            result.put("video" , movie.getHasVideos());
         } catch (JSONException jsonString)
         {
             return null;
