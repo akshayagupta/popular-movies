@@ -7,10 +7,6 @@
               android:orientation="horizontal"
               tools:context="com.example.android.sunshine.app.MainActivity">
 
-    <!--
-    This layout is a two-pane layout for the Items master/detail flow.
-    -->
-
     <fragment
             android:id="@+id/movie_list_fragment"
             android:name="app.zh.popularmovies.app.ui.fragment.PopularMovieFragment"
