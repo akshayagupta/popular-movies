@@ -14,10 +14,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import app.zh.popularmovies.app.BuildConfig;
-import app.zh.popularmovies.app.FetchComplete;
-import app.zh.popularmovies.app.R;
-import app.zh.popularmovies.app.Utilities;
+import app.zh.popularmovies.app.*;
 import app.zh.popularmovies.app.convertor.MovieConvertor;
 import app.zh.popularmovies.app.models.Movie;
 import app.zh.popularmovies.app.network.FetchMovieTask;
@@ -60,7 +57,6 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        Log.d("sorting order changed", "sorting order");
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
         _movieGridView = ((GridView) rootView.findViewById(R.id.movie_grid_view));
         ArrayList<Movie> _movieList = new ArrayList<>();
@@ -90,6 +86,12 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
     public void onStart()
     {
         super.onStart();
+        if (sortLogic != null && sortLogic.equals(getString(R.string.pref_units_favorite)))
+        {
+            ArrayList<Movie> movieArrayList = DependencyFactory.getFavoriteFeature().getAllFavoriteMovie();
+            _imageAdapter.updateData(movieArrayList);
+            return;
+        }
         if (sortLogic != null && !sortLogic.equals(Utilities.getSortLogic(getActivity())))
         {
             sortLogic = Utilities.getSortLogic(getActivity());
@@ -99,6 +101,12 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
 
     private void fetchMovies()
     {
+        if (sortLogic != null && sortLogic.equals(getString(R.string.pref_units_favorite)))
+        {
+            ArrayList<Movie> movieArrayList = DependencyFactory.getFavoriteFeature().getAllFavoriteMovie();
+            _imageAdapter.updateData(movieArrayList);
+            return;
+        }
         FetchMovieTask fetchMovieTask = new FetchMovieTask(Utilities.getSortLogic(getActivity()), fetchCompleteInterFace);
         fetchMovieTask.execute();
     }

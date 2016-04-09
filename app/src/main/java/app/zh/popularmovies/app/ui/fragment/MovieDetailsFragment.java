@@ -16,6 +16,7 @@ import app.zh.popularmovies.app.DependencyFactory;
 import app.zh.popularmovies.app.FetchComplete;
 import app.zh.popularmovies.app.R;
 import app.zh.popularmovies.app.convertor.MovieConvertor;
+import app.zh.popularmovies.app.features.IFavoriteFeature;
 import app.zh.popularmovies.app.models.Movie;
 import app.zh.popularmovies.app.models.Review;
 import app.zh.popularmovies.app.models.Trailer;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class MovieDetailsFragment extends Fragment
 {
-    private TextView titleView ;
+    private TextView titleView;
     private TextView releaseDateView;
     private TextView overView;
     private ImageView posterView;
@@ -43,12 +44,13 @@ public class MovieDetailsFragment extends Fragment
     private TextView reviewDescription;
     private TextView firstReview;
     private TextView secondReview;
-    private TextView ratingView ;
+    private TextView ratingView;
 
     public static final String DETAIL_URI = "URI";
     private Movie movie;
     private ArrayList<Trailer> _trailerArrayList;
     private ArrayList<Review> _reviewArrayList;
+    private IFavoriteFeature _favoriteFeature;
 
     public MovieDetailsFragment()
     {
@@ -102,6 +104,7 @@ public class MovieDetailsFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
+        _favoriteFeature = DependencyFactory.getFavoriteFeature();
         initView(view);
         renderVIew();
         super.onViewCreated(view, savedInstanceState);
@@ -114,13 +117,27 @@ public class MovieDetailsFragment extends Fragment
         releaseDateView.setText(movie.getReleaseDate());
         ratingView.setText("" + movie.get_voteAverage());
         overView.setText(movie.getOverView());
-        _addFavorite.setText("Add Favorite");
+        if (!_favoriteFeature.isFavorite(movie.getMovieId()))
+        {
+            _addFavorite.setText("Add Favorite");
+        } else
+        {
+            _addFavorite.setText("Remove Favorite");
+        }
         _addFavorite.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-
+                if (_favoriteFeature.isFavorite(movie.getMovieId()))
+                {
+                    _favoriteFeature.removeFavorite(movie.getMovieId());
+                    _addFavorite.setText("Add Favorite");
+                } else
+                {
+                    _favoriteFeature.addToFavorite(movie);
+                    _addFavorite.setText("Remove Favorite");
+                }
             }
         });
     }
@@ -176,7 +193,7 @@ public class MovieDetailsFragment extends Fragment
                 _trailerArrayList = objectList;
                 if (size == 1)
                 {
-                    Log.d("trailer reault" , "trialer result");
+                    Log.d("trailer reault", "trialer result");
                     trailerText.setVisibility(View.VISIBLE);
                     firstTrailer.setVisibility(View.VISIBLE);
                     firstTrailer.setText(_trailerArrayList.get(0).getName());
