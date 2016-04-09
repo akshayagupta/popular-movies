@@ -2,12 +2,11 @@ package app.zh.popularmovies.app.network;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 import app.zh.popularmovies.app.BuildConfig;
 import app.zh.popularmovies.app.FetchComplete;
-import app.zh.popularmovies.app.convertor.MovieConvertor;
+import app.zh.popularmovies.app.convertor.ReviewConvertor;
 import app.zh.popularmovies.app.models.Movie;
-import org.json.JSONArray;
+import app.zh.popularmovies.app.models.Review;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,42 +17,49 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
-public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
+public class FetchReviewTask extends AsyncTask<Void, Void, ArrayList<Review>>
 {
+    Movie _movie;
+    private FetchComplete<Review> fetchCompleteInerface ;
 
-    private FetchComplete<Movie> _fetchComplete;
-    private String _sortLogic;
-
-    public FetchMovieTask(String sortLogic, FetchComplete<Movie> fetchComplete)
+    public FetchReviewTask(Movie movie , FetchComplete<Review> reviewFetchComplete)
     {
-        _fetchComplete = fetchComplete;
-        _sortLogic = sortLogic;
+        _movie = movie;
+        fetchCompleteInerface = reviewFetchComplete;
+    }
+
+    private ArrayList<Review> getReviewInfo(String jsonData) throws JSONException
+    {
+        JSONObject jsonObject = new JSONObject(jsonData);
+        ArrayList<Review> reviewList = new ReviewConvertor().getReviewList(jsonObject);
+        return reviewList;
     }
 
     @Override
-    protected ArrayList<Movie> doInBackground(Void... params)
+    protected void onPostExecute(ArrayList<Review> reviewList)
+    {
+        super.onPostExecute(reviewList);
+        fetchCompleteInerface.onFetchComplete(reviewList);
+    }
+
+    @Override
+    protected ArrayList<Review> doInBackground(Void... params)
     {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String movieInfoJsonStr = null;
-
         try
         {
             final String MOVIE_BASE_URL =
-                    "http://api.themoviedb.org/3/discover/movie";
+                    "http://api.themoviedb.org/3/movie";
             final String APPID_PARAM = "api_key";
-            final String SORTING_PARAM = "sort_by";
-
-
             Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+                    .appendPath(_movie.getMovieId()).appendPath("reviews")
                     .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_MOVIE_API_KEY)
-                    .appendQueryParameter(SORTING_PARAM, _sortLogic)
                     .build();
-
             URL url = new URL(builtUri.toString());
-            Log.d("moviefragment", builtUri.toString());
-
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -65,7 +71,6 @@ public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
                 return null;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
-
             String line;
             while ((line = reader.readLine()) != null)
             {
@@ -77,7 +82,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
                 return null;
             }
             movieInfoJsonStr = buffer.toString();
-        } catch (IOException e)
+        } catch (IOException ioException)
         {
             return null;
         } finally
@@ -97,43 +102,14 @@ public class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<Movie>>
                 }
             }
         }
-
         try
         {
-            return getMovieInfoFromJSon(movieInfoJsonStr);
+            return getReviewInfo(movieInfoJsonStr);
 
         } catch (JSONException jsonException)
         {
 
         }
         return null;
-    }
-
-
-    private ArrayList<Movie> getMovieInfoFromJSon(String jsonData) throws JSONException
-    {
-        ArrayList<Movie> movieList = new ArrayList<Movie>();
-        JSONObject jsonObject = new JSONObject(jsonData);
-        JSONArray movieJsonArray = jsonObject.getJSONArray("results");
-        for (int i = 0; i < movieJsonArray.length(); i++)
-        {
-            Movie movie = new MovieConvertor().getMovieFromJSon(movieJsonArray.getJSONObject(i));
-            if (movie != null)
-            {
-                movieList.add(movie);
-            }
-        }
-        return movieList;
-    }
-
-
-    @Override
-    protected void onPostExecute(ArrayList<Movie> movies)
-    {
-
-        if (movies != null)
-        {
-            _fetchComplete.onFetchComplete(movies);
-        }
     }
 }

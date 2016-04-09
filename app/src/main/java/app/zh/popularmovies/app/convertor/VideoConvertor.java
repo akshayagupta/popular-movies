@@ -1,6 +1,8 @@
 package app.zh.popularmovies.app.convertor;
 
+import android.provider.MediaStore;
 import app.zh.popularmovies.app.models.Movie;
+import app.zh.popularmovies.app.models.Trailer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,17 +12,20 @@ import java.util.List;
 
 public class VideoConvertor
 {
-    public List<String> getVideoKey(JSONObject jsonObject)
+    public ArrayList<Trailer> getVideoKey( JSONObject jsonObject)
     {
-        List<String> trailerList = new ArrayList<String>();
+
+        ArrayList<Trailer> trailerList = new ArrayList<Trailer>();
         try
         {
+            String movieID = jsonObject.getString("id");
             JSONArray reviewResult = jsonObject.getJSONArray("results");
             for (int i = 0; i < reviewResult.length(); i++)
             {
                 JSONObject trailerItem = reviewResult.getJSONObject(i);
                 String key = trailerItem.getString("key");
-                trailerList.add(key);
+                String name = trailerItem.getString("name");
+                trailerList.add(new Trailer(movieID , name , key));
             }
             return trailerList;
 
@@ -31,23 +36,4 @@ public class VideoConvertor
         return trailerList;
     }
 
-    public JSONArray getVideoJson(Movie movie)
-    {
-        List<String> keyList = movie.getVideoKeyList();
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < keyList.size(); i++)
-        {
-            try
-            {
-
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("key", keyList.get(i));
-                jsonArray.put(i, jsonObject);
-            } catch (JSONException jsonException)
-            {
-                return null;
-            }
-        }
-        return jsonArray ;
-    }
-}
+   }

@@ -15,6 +15,7 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import app.zh.popularmovies.app.BuildConfig;
+import app.zh.popularmovies.app.FetchComplete;
 import app.zh.popularmovies.app.R;
 import app.zh.popularmovies.app.Utilities;
 import app.zh.popularmovies.app.convertor.MovieConvertor;
@@ -40,6 +41,14 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
 
     private GridView _movieGridView;
     private ImageAdapter _imageAdapter;
+    private FetchComplete<Movie> fetchCompleteInterFace = new FetchComplete<Movie>()
+    {
+        @Override
+        public void onFetchComplete(ArrayList<Movie> objectList)
+        {
+            _imageAdapter.updateData(objectList);
+        }
+    };
 
     private String sortLogic;
 
@@ -90,7 +99,7 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
 
     private void fetchMovies()
     {
-        FetchMovieTask fetchMovieTask = new FetchMovieTask(Utilities.getSortLogic(getActivity()), _imageAdapter);
+        FetchMovieTask fetchMovieTask = new FetchMovieTask(Utilities.getSortLogic(getActivity()), fetchCompleteInterFace);
         fetchMovieTask.execute();
     }
 

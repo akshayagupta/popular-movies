@@ -2,6 +2,7 @@ package app.zh.popularmovies.app.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import app.zh.popularmovies.app.R;
@@ -24,7 +25,7 @@ public class MovieDetailsActivity extends ActionBarActivity
 
             Bundle arguments = new Bundle();
             arguments.putString(MovieDetailsFragment.DETAIL_URI, getIntent().getStringExtra(JSON_DESCRIPTION));
-
+            Log.d("moviedetailsjsonstring" , getIntent().getStringExtra(JSON_DESCRIPTION));
             MovieDetailsFragment fragment = new MovieDetailsFragment();
             fragment.setArguments(arguments);
 

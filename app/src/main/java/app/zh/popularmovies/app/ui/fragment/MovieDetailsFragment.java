@@ -4,7 +4,6 @@ package app.zh.popularmovies.app.ui.fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +11,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import app.zh.popularmovies.app.FetchComplete;
 import app.zh.popularmovies.app.R;
 import app.zh.popularmovies.app.convertor.MovieConvertor;
 import app.zh.popularmovies.app.models.Movie;
+import app.zh.popularmovies.app.models.Review;
+import app.zh.popularmovies.app.models.Trailer;
+import app.zh.popularmovies.app.network.FetchReviewTask;
+import app.zh.popularmovies.app.network.FetchVideoTask;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieDetailsFragment extends Fragment
@@ -44,11 +48,61 @@ public class MovieDetailsFragment extends Fragment
     LinearLayout _trailerContainer;
     public static final String DETAIL_URI = "URI";
     private Movie movie;
+    private ArrayList<Trailer> _trailerArrayList;
+    private ArrayList<Review> _reviewArrayList;
 
     public MovieDetailsFragment()
     {
 
     }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        fetchReviews();
+        fetchTrailers();
+    }
+
+    private void fetchTrailers()
+    {
+        if (movie.getHasVideos())
+        {
+            FetchVideoTask fetchVideoTask = new FetchVideoTask(movie, getTrailerInterFace());
+            fetchVideoTask.execute();
+        }
+    }
+
+    private void fetchReviews()
+    {
+        FetchReviewTask fetchReviewTask = new FetchReviewTask(movie, getReviewInterface());
+        fetchReviewTask.execute();
+    }
+
+    private FetchComplete<Review> getReviewInterface()
+    {
+        return new FetchComplete<Review>()
+        {
+            @Override
+            public void onFetchComplete(ArrayList<Review> objectList)
+            {
+                _reviewArrayList = objectList;
+            }
+        };
+    }
+
+    private FetchComplete<Trailer> getTrailerInterFace()
+    {
+        return new FetchComplete<Trailer>()
+        {
+            @Override
+            public void onFetchComplete(ArrayList<Trailer> objectList)
+            {
+                _trailerArrayList = objectList;
+            }
+        };
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -59,7 +113,6 @@ public class MovieDetailsFragment extends Fragment
         {
             try
             {
-
                 movie = new MovieConvertor().getMovieFromJsonString(arguments.getString(DETAIL_URI));
             } catch (JSONException jsonEception)
             {
@@ -79,32 +132,6 @@ public class MovieDetailsFragment extends Fragment
         releaseDateView.setText(movie.getReleaseDate());
         voteAvgView.setText("" + movie.get_voteAverage());
         overView.setText(movie.getReleaseDate());
-        final List<String> keyList = movie.getVideoKeyList();
-        if (keyList.size() != 0)
-        {
-            trailerText.setVisibility(View.VISIBLE);
-            _trailerContainer.setVisibility(View.VISIBLE);
-            for (int i = 0; i < keyList.size(); i++)
-            {
-                final int currentPos = i;
-                TextView textView = new TextView(getActivity());
-                textView.setText("Trailer " + (currentPos + 1));
-                textView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        openVideo(currentPos);
-                    }
-                });
-                _trailerContainer.addView(textView);
-            }
-        }
-    }
-
-    private void openVideo(int currentPos)
-    {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + movie.getVideoKeyList().get(currentPos))));
     }
 
 
