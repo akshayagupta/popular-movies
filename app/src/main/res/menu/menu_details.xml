@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="app.zh.popularmovies.app.PopularMovieActivity">
+    <item android:id="@+id/share_item"
+          android:title="Share Trailer"
+          android:icon="@drawable/share_notification_white"
+          android:orderInCategory="100"
+          app:showAsAction="always"/>
+</menu>

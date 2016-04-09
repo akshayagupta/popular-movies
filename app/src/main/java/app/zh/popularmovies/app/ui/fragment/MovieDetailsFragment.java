@@ -6,9 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,6 +43,7 @@ public class MovieDetailsFragment extends Fragment
     private TextView firstReview;
     private TextView secondReview;
     private TextView ratingView;
+    private MenuItem shareItem;
 
     public static final String DETAIL_URI = "URI";
     private Movie movie;
@@ -98,6 +97,7 @@ public class MovieDetailsFragment extends Fragment
         }
         View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.movie_detail_fragment, container, false);
         ButterKnife.bind(getActivity());
+        setHasOptionsMenu(true);
         return rootView;
     }
 
@@ -167,11 +167,13 @@ public class MovieDetailsFragment extends Fragment
                 _reviewArrayList = objectList;
                 if (size == 1)
                 {
+                    shareItem.setVisible(true);
                     reviewDescription.setVisibility(View.VISIBLE);
                     firstReview.setVisibility(View.VISIBLE);
                     firstReview.setText(objectList.get(0).getAuthor() + ":   " + objectList.get(0).getContent());
                 } else if (size != 0)
                 {
+                    shareItem.setVisible(true);
                     reviewDescription.setVisibility(View.VISIBLE);
                     firstReview.setVisibility(View.VISIBLE);
                     secondReview.setVisibility(View.VISIBLE);
@@ -224,5 +226,31 @@ public class MovieDetailsFragment extends Fragment
         };
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.menu_details, menu);
+        MenuItem menuItem = menu.findItem(R.id.share_item);
+        if (_trailerArrayList != null && _trailerArrayList.size() != 0)
+        {
+            menuItem.setVisible(false);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.share_item:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_SUBJECT, movie.getTitle() + " Trailer");
+                intent.putExtra(Intent.EXTRA_TEXT, "http://www.youtube.com/watch?v=" + _trailerArrayList.get(0).getKey());
+                intent.setType("text/plain");
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
