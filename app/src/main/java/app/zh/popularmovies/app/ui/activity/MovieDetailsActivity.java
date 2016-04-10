@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import app.zh.popularmovies.app.R;
+import app.zh.popularmovies.app.models.Movie;
 import app.zh.popularmovies.app.ui.fragment.MovieDetailsFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,11 +25,10 @@ public class MovieDetailsActivity extends ActionBarActivity
         if (savedInstanceState == null) {
 
             Bundle arguments = new Bundle();
-            arguments.putString(MovieDetailsFragment.DETAIL_URI, getIntent().getStringExtra(JSON_DESCRIPTION));
-            Log.d("moviedetailsjsonstring" , getIntent().getStringExtra(JSON_DESCRIPTION));
+            Movie movie = getIntent().getExtras().getParcelable(JSON_DESCRIPTION);
+            arguments.putParcelable(MovieDetailsFragment.DETAIL_URI , movie);
             MovieDetailsFragment fragment = new MovieDetailsFragment();
             fragment.setArguments(arguments);
-
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.movie_detail_container, fragment)
                     .commit();

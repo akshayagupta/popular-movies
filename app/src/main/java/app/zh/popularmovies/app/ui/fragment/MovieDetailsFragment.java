@@ -84,17 +84,7 @@ public class MovieDetailsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         Bundle arguments = getArguments();
-        if (arguments != null)
-        {
-            try
-            {
-                Log.d("movie details fragment", arguments.getString(DETAIL_URI));
-                movie = new MovieConvertor().getMovieFromJsonString(arguments.getString(DETAIL_URI));
-            } catch (JSONException jsonEception)
-            {
-
-            }
-        }
+        movie = arguments.getParcelable(DETAIL_URI);
         View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.movie_detail_fragment, container, false);
         ButterKnife.bind(getActivity());
         setHasOptionsMenu(true);
@@ -163,22 +153,23 @@ public class MovieDetailsFragment extends Fragment
             @Override
             public void onFetchComplete(ArrayList<Review> objectList)
             {
-                int size = objectList.size();
-                _reviewArrayList = objectList;
-                if (size == 1)
+                if (objectList != null)
                 {
-                    shareItem.setVisible(true);
-                    reviewDescription.setVisibility(View.VISIBLE);
-                    firstReview.setVisibility(View.VISIBLE);
-                    firstReview.setText(objectList.get(0).getAuthor() + ":   " + objectList.get(0).getContent());
-                } else if (size != 0)
-                {
-                    shareItem.setVisible(true);
-                    reviewDescription.setVisibility(View.VISIBLE);
-                    firstReview.setVisibility(View.VISIBLE);
-                    secondReview.setVisibility(View.VISIBLE);
-                    firstReview.setText(objectList.get(0).getAuthor() + ":   " + objectList.get(0).getContent());
-                    secondReview.setText(objectList.get(1).getAuthor() + ":   " + objectList.get(1).getContent());
+                    int size = objectList.size();
+                    _reviewArrayList = objectList;
+                    if (size == 1)
+                    {
+                        reviewDescription.setVisibility(View.VISIBLE);
+                        firstReview.setVisibility(View.VISIBLE);
+                        firstReview.setText(objectList.get(0).getAuthor() + ":   " + objectList.get(0).getContent());
+                    } else if (size != 0)
+                    {
+                        reviewDescription.setVisibility(View.VISIBLE);
+                        firstReview.setVisibility(View.VISIBLE);
+                        secondReview.setVisibility(View.VISIBLE);
+                        firstReview.setText(objectList.get(0).getAuthor() + ":   " + objectList.get(0).getContent());
+                        secondReview.setText(objectList.get(1).getAuthor() + ":   " + objectList.get(1).getContent());
+                    }
                 }
             }
         };
@@ -191,24 +182,28 @@ public class MovieDetailsFragment extends Fragment
             @Override
             public void onFetchComplete(ArrayList<Trailer> objectList)
             {
-                int size = objectList.size();
-                _trailerArrayList = objectList;
-                if (size == 1)
+                if (objectList != null)
                 {
-                    Log.d("trailer reault", "trialer result");
-                    trailerText.setVisibility(View.VISIBLE);
-                    firstTrailer.setVisibility(View.VISIBLE);
-                    firstTrailer.setText(_trailerArrayList.get(0).getName());
-                    firstTrailer.setOnClickListener(getTrailerClickListener(_trailerArrayList.get(0).getKey()));
-                } else if (size != 0)
-                {
-                    reviewDescription.setVisibility(View.VISIBLE);
-                    firstReview.setVisibility(View.VISIBLE);
-                    secondReview.setVisibility(View.VISIBLE);
-                    firstTrailer.setText(_trailerArrayList.get(0).getName());
-                    secondTrailer.setText(_trailerArrayList.get(1).getName());
-                    firstTrailer.setOnClickListener(getTrailerClickListener(_trailerArrayList.get(0).getKey()));
-                    secondTrailer.setOnClickListener(getTrailerClickListener(_trailerArrayList.get(1).getKey()));
+                    int size = objectList.size();
+                    _trailerArrayList = objectList;
+                    if (size == 1)
+                    {
+                        shareItem.setVisible(true);
+                        trailerText.setVisibility(View.VISIBLE);
+                        firstTrailer.setVisibility(View.VISIBLE);
+                        firstTrailer.setText(_trailerArrayList.get(0).getName());
+                        firstTrailer.setOnClickListener(getTrailerClickListener(_trailerArrayList.get(0).getKey()));
+                    } else if (size != 0)
+                    {
+                        shareItem.setVisible(true);
+                        trailerText.setVisibility(View.VISIBLE);
+                        firstTrailer.setVisibility(View.VISIBLE);
+                        secondTrailer.setVisibility(View.VISIBLE);
+                        firstTrailer.setText(_trailerArrayList.get(0).getName());
+                        secondTrailer.setText(_trailerArrayList.get(1).getName());
+                        firstTrailer.setOnClickListener(getTrailerClickListener(_trailerArrayList.get(0).getKey()));
+                        secondTrailer.setOnClickListener(getTrailerClickListener(_trailerArrayList.get(1).getKey()));
+                    }
                 }
             }
         };
@@ -230,10 +225,14 @@ public class MovieDetailsFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         inflater.inflate(R.menu.menu_details, menu);
-        MenuItem menuItem = menu.findItem(R.id.share_item);
+        shareItem = menu.findItem(R.id.share_item);
         if (_trailerArrayList != null && _trailerArrayList.size() != 0)
         {
-            menuItem.setVisible(false);
+            shareItem.setVisible(true);
+        } else
+        {
+            shareItem.setVisible(false);
+
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -252,5 +251,10 @@ public class MovieDetailsFragment extends Fragment
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onSettingChanged(String sortLogic)
+    {
+
     }
 }

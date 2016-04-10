@@ -1,14 +1,13 @@
 package app.zh.popularmovies.app.ui.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import app.zh.popularmovies.app.R;
+import app.zh.popularmovies.app.Utilities;
 import app.zh.popularmovies.app.convertor.MovieConvertor;
 import app.zh.popularmovies.app.models.Movie;
 import app.zh.popularmovies.app.ui.fragment.MovieDetailsFragment;
@@ -18,6 +17,7 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
 {
     private static final String MOVIE_DETAIL_FRAGMENT_TAG = "MDFTAG";
     private boolean mTwoPane;
+    private String mSortLogic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,10 +35,6 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
             mTwoPane = false;
             getSupportActionBar().setElevation(0f);
         }
-
-        PopularMovieFragment forecastFragment =  ((PopularMovieFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.movie_list_fragment));
-
     }
 
 
@@ -64,19 +60,39 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
     }
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+        String sortLogic = Utilities.getSortLogic(this);
+        // update the location in our second pane using the fragment manager
+        if (sortLogic != null && !sortLogic.equals(mSortLogic)) {
+            PopularMovieFragment ff = (PopularMovieFragment)getSupportFragmentManager().findFragmentById(R.id.movie_list_fragment);
+            if ( null != ff ) {
+                ff.onSettingChanged(sortLogic);
+            }
+            MovieDetailsFragment df = (MovieDetailsFragment)getSupportFragmentManager().findFragmentByTag(MOVIE_DETAIL_FRAGMENT_TAG);
+            if ( null != df ) {
+                df.onSettingChanged(sortLogic);
+            }
+            mSortLogic = sortLogic;
+        }
+
+    }
+
+    @Override
     public void itemClicked(Movie movie)
     {
         if (mTwoPane) {
             Bundle args = new Bundle();
-            args.putString(MovieDetailsFragment.DETAIL_URI, new MovieConvertor().getMovieJsonString(movie));
+            args.putParcelable(MovieDetailsFragment.DETAIL_URI , movie);
             MovieDetailsFragment fragment = new MovieDetailsFragment();
             fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_detail_container, fragment, MOVIE_DETAIL_FRAGMENT_TAG)
                     .commit();
         } else {
-            Intent intent = new Intent(this, MovieDetailsActivity.class)
-                    .putExtra(MovieDetailsActivity.JSON_DESCRIPTION , new MovieConvertor().getMovieJsonString(movie));
+            Intent intent = new Intent(this, MovieDetailsActivity.class);
+            intent.putExtra(MovieDetailsActivity.JSON_DESCRIPTION , movie);
             startActivity(intent);
         }
 
