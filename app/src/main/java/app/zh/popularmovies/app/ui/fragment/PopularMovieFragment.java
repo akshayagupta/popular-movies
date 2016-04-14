@@ -65,7 +65,7 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
         sortLogic = Utilities.getSortLogic(getActivity());
         if (savedInstanceState == null || !savedInstanceState.containsKey("movieList"))
         {
-            fetchMovies();
+            fetchMovies(sortLogic);
         } else
         {
             _movieList = savedInstanceState.getParcelableArrayList("movieList");
@@ -86,20 +86,23 @@ public class PopularMovieFragment extends android.support.v4.app.Fragment
     public void onStart()
     {
         super.onStart();
-        if (sortLogic != null && sortLogic.equals(getString(R.string.pref_units_favorite)))
+    }
+
+    public void onSettingChanged(String sortLogic)
+    {
+        if (sortLogic.equals(getString(R.string.pref_units_favorite)))
         {
             ArrayList<Movie> movieArrayList = DependencyFactory.getFavoriteFeature().getAllFavoriteMovie();
             _imageAdapter.updateData(movieArrayList);
             return;
-        }
-        if (sortLogic != null && !sortLogic.equals(Utilities.getSortLogic(getActivity())))
+        } else
         {
-            sortLogic = Utilities.getSortLogic(getActivity());
-            fetchMovies();
+            fetchMovies(sortLogic);
         }
+
     }
 
-    private void fetchMovies()
+    private void fetchMovies(String sortLogic)
     {
         if (sortLogic != null && sortLogic.equals(getString(R.string.pref_units_favorite)))
         {

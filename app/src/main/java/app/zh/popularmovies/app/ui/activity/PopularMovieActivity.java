@@ -24,14 +24,18 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
-        if (findViewById(R.id.movie_detail_container) != null) {
+        mSortLogic = Utilities.getSortLogic(this);
+        if (findViewById(R.id.movie_detail_container) != null)
+        {
             mTwoPane = true;
-            if (savedInstanceState == null) {
+            if (savedInstanceState == null)
+            {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.movie_detail_container, new MovieDetailsFragment(), MOVIE_DETAIL_FRAGMENT_TAG)
                         .commit();
             }
-        } else {
+        } else
+        {
             mTwoPane = false;
             getSupportActionBar().setElevation(0f);
         }
@@ -65,16 +69,28 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
         super.onResume();
         String sortLogic = Utilities.getSortLogic(this);
         // update the location in our second pane using the fragment manager
-        if (sortLogic != null && !sortLogic.equals(mSortLogic)) {
-            PopularMovieFragment ff = (PopularMovieFragment)getSupportFragmentManager().findFragmentById(R.id.movie_list_fragment);
-            if ( null != ff ) {
-                //ff.onSettingChanged(sortLogic);
+        if (sortLogic != null && !sortLogic.equals(mSortLogic))
+        {
+            PopularMovieFragment ff = (PopularMovieFragment) getSupportFragmentManager().findFragmentById(R.id.movie_list_fragment);
+            if (null != ff)
+            {
+                ff.onSettingChanged(sortLogic);
             }
-            MovieDetailsFragment df = (MovieDetailsFragment)getSupportFragmentManager().findFragmentByTag(MOVIE_DETAIL_FRAGMENT_TAG);
-            if ( null != df ) {
-                df.onSettingChanged(sortLogic);
+            MovieDetailsFragment df = (MovieDetailsFragment) getSupportFragmentManager().findFragmentByTag(MOVIE_DETAIL_FRAGMENT_TAG);
+            if (null != df)
+            {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, new MovieDetailsFragment(), MOVIE_DETAIL_FRAGMENT_TAG)
+                        .commit();
             }
             mSortLogic = sortLogic;
+        } else if (sortLogic != null && sortLogic.equals(getString(R.string.pref_units_favorite)))
+        {
+            PopularMovieFragment ff = (PopularMovieFragment) getSupportFragmentManager().findFragmentById(R.id.movie_list_fragment);
+            if (null != ff)
+            {
+                ff.onSettingChanged(sortLogic);
+            }
         }
 
     }
@@ -82,17 +98,19 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
     @Override
     public void itemClicked(Movie movie)
     {
-        if (mTwoPane) {
+        if (mTwoPane)
+        {
             Bundle args = new Bundle();
-            args.putParcelable(MovieDetailsFragment.DETAIL_URI , movie);
+            args.putParcelable(MovieDetailsFragment.DETAIL_URI, movie);
             MovieDetailsFragment fragment = new MovieDetailsFragment();
             fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_detail_container, fragment, MOVIE_DETAIL_FRAGMENT_TAG)
                     .commit();
-        } else {
+        } else
+        {
             Intent intent = new Intent(this, MovieDetailsActivity.class);
-            intent.putExtra(MovieDetailsActivity.JSON_DESCRIPTION , movie);
+            intent.putExtra(MovieDetailsActivity.JSON_DESCRIPTION, movie);
             startActivity(intent);
         }
 

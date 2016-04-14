@@ -107,6 +107,7 @@ public class MovieDetailsFragment extends Fragment
     {
         if (movie != null)
         {
+            posterView.setVisibility(View.VISIBLE);
             titleView.setVisibility(View.VISIBLE);
             releaseDateView.setVisibility(View.VISIBLE);
             releaseDateView.setVisibility(View.VISIBLE);
@@ -121,25 +122,18 @@ public class MovieDetailsFragment extends Fragment
             if (!_favoriteFeature.isFavorite(movie.getMovieId()))
             {
                 _addFavorite.setText("Add Favorite");
-            } else
-            {
-                _addFavorite.setText("Remove Favorite");
+            }else{
+                _addFavorite.setText("Favorite Movie");
             }
             _addFavorite.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    if (_favoriteFeature.isFavorite(movie.getMovieId()))
-                    {
-                        _favoriteFeature.removeFavorite(movie.getMovieId());
-                        _addFavorite.setText("Add Favorite");
-                    } else
-                    {
-                        _favoriteFeature.addToFavorite(movie);
-                        _addFavorite.setText("Remove Favorite");
-                    }
+                    _favoriteFeature.addToFavorite(movie);
+                    _addFavorite.setText("Favorite Movie");
                 }
+
             });
         }
     }
