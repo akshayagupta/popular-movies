@@ -84,7 +84,10 @@ public class MovieDetailsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         Bundle arguments = getArguments();
-        movie = arguments.getParcelable(DETAIL_URI);
+        if (arguments != null)
+        {
+            movie = arguments.getParcelable(DETAIL_URI);
+        }
         View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.movie_detail_fragment, container, false);
         ButterKnife.bind(getActivity());
         setHasOptionsMenu(true);
@@ -102,48 +105,62 @@ public class MovieDetailsFragment extends Fragment
 
     private void renderVIew()
     {
-        titleView.setText(movie.getTitle());
-        Picasso.with(getActivity()).load("https://image.tmdb.org/t/p/w185" + movie.getPosterPath()).into(posterView);
-        releaseDateView.setText(movie.getReleaseDate());
-        ratingView.setText("" + movie.get_voteAverage());
-        overView.setText(movie.getOverView());
-        if (!_favoriteFeature.isFavorite(movie.getMovieId()))
+        if (movie != null)
         {
-            _addFavorite.setText("Add Favorite");
-        } else
-        {
-            _addFavorite.setText("Remove Favorite");
-        }
-        _addFavorite.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
+            titleView.setVisibility(View.VISIBLE);
+            releaseDateView.setVisibility(View.VISIBLE);
+            releaseDateView.setVisibility(View.VISIBLE);
+            ratingView.setVisibility(View.VISIBLE);
+            overView.setVisibility(View.VISIBLE);
+            _addFavorite.setVisibility(View.VISIBLE);
+            titleView.setText(movie.getTitle());
+            Picasso.with(getActivity()).load("https://image.tmdb.org/t/p/w185" + movie.getPosterPath()).into(posterView);
+            releaseDateView.setText(movie.getReleaseDate());
+            ratingView.setText("" + movie.get_voteAverage());
+            overView.setText(movie.getOverView());
+            if (!_favoriteFeature.isFavorite(movie.getMovieId()))
             {
-                if (_favoriteFeature.isFavorite(movie.getMovieId()))
-                {
-                    _favoriteFeature.removeFavorite(movie.getMovieId());
-                    _addFavorite.setText("Add Favorite");
-                } else
-                {
-                    _favoriteFeature.addToFavorite(movie);
-                    _addFavorite.setText("Remove Favorite");
-                }
+                _addFavorite.setText("Add Favorite");
+            } else
+            {
+                _addFavorite.setText("Remove Favorite");
             }
-        });
+            _addFavorite.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (_favoriteFeature.isFavorite(movie.getMovieId()))
+                    {
+                        _favoriteFeature.removeFavorite(movie.getMovieId());
+                        _addFavorite.setText("Add Favorite");
+                    } else
+                    {
+                        _favoriteFeature.addToFavorite(movie);
+                        _addFavorite.setText("Remove Favorite");
+                    }
+                }
+            });
+        }
     }
 
 
     private void fetchTrailers()
     {
-
-        FetchVideoTask fetchVideoTask = new FetchVideoTask(movie, getTrailerInterFace());
-        fetchVideoTask.execute();
+        if (movie != null)
+        {
+            FetchVideoTask fetchVideoTask = new FetchVideoTask(movie, getTrailerInterFace());
+            fetchVideoTask.execute();
+        }
     }
 
     private void fetchReviews()
     {
-        FetchReviewTask fetchReviewTask = new FetchReviewTask(movie, getReviewInterface());
-        fetchReviewTask.execute();
+        if (movie != null)
+        {
+            FetchReviewTask fetchReviewTask = new FetchReviewTask(movie, getReviewInterface());
+            fetchReviewTask.execute();
+        }
     }
 
     private FetchComplete<Review> getReviewInterface()

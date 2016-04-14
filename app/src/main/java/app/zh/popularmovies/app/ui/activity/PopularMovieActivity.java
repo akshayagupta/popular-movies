@@ -68,7 +68,7 @@ public class PopularMovieActivity extends ActionBarActivity implements PopularMo
         if (sortLogic != null && !sortLogic.equals(mSortLogic)) {
             PopularMovieFragment ff = (PopularMovieFragment)getSupportFragmentManager().findFragmentById(R.id.movie_list_fragment);
             if ( null != ff ) {
-                ff.onSettingChanged(sortLogic);
+                //ff.onSettingChanged(sortLogic);
             }
             MovieDetailsFragment df = (MovieDetailsFragment)getSupportFragmentManager().findFragmentByTag(MOVIE_DETAIL_FRAGMENT_TAG);
             if ( null != df ) {
